@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Api\BaseController as BaseController;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,11 +28,13 @@ class UserController extends Controller
             'user' => $user,
             'token' => $token
         ];
-
         return response($response, 201);
+      // return $this->sendResponse($response ,'User login successfully' );
+
     }
 
     public function register(UserReqisterRequest $request){
+        // dd(44);
         $user=new User();
         $user->name=$request->name;
         $user->email=$request->email;
@@ -42,7 +45,9 @@ class UserController extends Controller
             'user'=>$user,
             'token'=>$token
         ];
+      // return $this->sendResponse($respons ,'User registered successfully' );
         return $respons;
+
     }
 
   public function logout(Request $request){

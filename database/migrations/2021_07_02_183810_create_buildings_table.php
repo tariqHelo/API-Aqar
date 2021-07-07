@@ -28,7 +28,8 @@ class CreateBuildingsTable extends Migration
 
             $table->string('worker');
             $table->integer('phone');
-           
+            $table->foreignId('floor_id')->nullable()->constrained();
+
             $table->timestamps();
         });
     }
@@ -43,50 +44,3 @@ class CreateBuildingsTable extends Migration
         Schema::dropIfExists('buildings');
     }
 }
- // $table->string('floor_No');
-
- // $table->string('apartment_number');
- // $table->string('the_number_of_bathrooms');
- // $table->string('the_number_of_halls');
- // $table->string('the_number_of_kitchens');
- // $table->string('the_number_of_stores');
- // $table->string('is_there_a_balcony');
- // $table->string('is_there_a_ready_kitchen');
- // $table->string('are_there_air_conditioners_installed');
- // $table->string('apartment_space');
-
- // $table->string('electricity_meter_number');
- // $table->string('property_value');
- // $table->string('yearly');
- // $table->string('midterm');
- // $table->string('quarterly');
- // $table->string('monthly');
- // $table->string('additional_details');
-
- // $table->string('shop_number');
- // $table->string('shop_space');
-
-
- // $table->string('is_there_any_water');
- // $table->string('is_there_electricity?');
- // $table->string('is_there_a_bathroom');
-
- // $table->string('yearly');
- // $table->string('midterm');
- // $table->string('quarterly');
- // $table->string('monthly');
- // $table->string('additional_details');
-
-
- // $table->string('image');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
- // $table->string('name');
