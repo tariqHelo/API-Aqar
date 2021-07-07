@@ -2,128 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Requests\UserReqisterRequest;
+
+
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+  public function login(Request $request)
     {
-        $users = User::orderBy('id','desc')->get();
-        return view('u-user.index',compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('u-user.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // return $request->all();
-        try{
-            // check if the email is used with another user
-            if(User::where('email',$request->email)->count() > 0 )
-                return redirect()->back()->withInput()->with(['error' => "الرجاء تغيير البريد الالكتروني, مستخدم بالفعل مع مستخدم أخر ."]);
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
-            return redirect()->route('u-user.index')->withInput()->with(['success' => "تمت الاضافة بنجاح"]);            
-        }catch(\Exception $ex){
-            return $ex;
-            return redirect()->back()->withInput()->with(['error' => "حدثت مشكلة الرجاء المحاولة لاحقاً ."]);            
+        $user= User::where('email', $request->email)->first();
+        // print_r($data);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => ['These credentials do not match our records.']
+            ], 404);
         }
-        
+
+        $token = $user->createToken('my-app-token')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        // 
+    public function register(UserReqisterRequest $request){
+        $user=new User();
+        $user->name=$request->name;
+        $user->email=$request->email;
+        $user->password=Hash::make($request->password);
+        $user->save();
+        $token=$user->createToken('my-app-token')->plainTextToken;
+        $respons=[
+            'user'=>$user,
+            'token'=>$token
+        ];
+        return $respons;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $user = User::find($id);
-        return view('u-user.edit',compact('user'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        
-        
-        try{ 
-            $user = User::find($request->id);
-
-            if($request->password){
-                $user->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                ]);
-            }else{
-                $user->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                ]);
-            }
-            
-            return redirect()->route('u-user.index')->withInput()->with(['success' => "تمت الاضافة بنجاح"]);            
-        }catch(\Exception $ex){
-            return redirect()->back()->withInput()->with(['error' => "حدثت مشكلة الرجاء المحاولة لاحقاً ."]);            
-        }
-        
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::find($id);
-
-        $user->delete();
-        return redirect()->route('u-user.index')->withInput()->with(['success' => "تمت الاضافة بنجاح"]);            
-    }
+  public function logout(Request $request){
+    auth()->user()->tokens()->delete();
+  }
 }

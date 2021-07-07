@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,28 +17,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-Route::group(['namespace' => 'API'], function () {
-    
-    Route::post('/login','UserController@login');
-    Route::post('/register_user','UserController@register');
-    Route::post('/register_eaqaris','EaqariController@register');
-    
-    // orders managment .
-    Route::post('/make_an_order','OrderController@store');
-    Route::post('/get_user_order','OrderController@index');
-    
-    // interest order .
-    Route::post('/add_to_interest_order','OrderController@interest');
-    Route::post('/get_interest_order','OrderController@get_interest_order');
-    
-    // near by order .
-    Route::post('/get_near_by_order','OrderController@get_near_order');
-    
-    // chat route .
-    Route::post('/coversisions','ChatController@coversisions');
-    Route::post('/chat','ChatController@chat');
-    Route::post('/send_message','ChatController@store');
-    
+Route::group(['middleware' => 'auth:sanctum'], function(){
+//All secure URL's
 });
+
+Route::post("login", [UserController::class,'login']);
+Route::post("register",[UserController::class,'register']);
