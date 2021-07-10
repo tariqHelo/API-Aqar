@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 use App\Http\Requests\UserReqisterRequest;
-
+use Validator;
 
 class UserController extends Controller
 {
@@ -33,8 +33,16 @@ class UserController extends Controller
 
     }
 
-    public function register(UserReqisterRequest $request){
-        // dd(44);
+    public function register(Request $request){
+         $validator = Validator::make($request->all(),[
+            'name'=>'required|string',
+            'email'=>'required|string|unique:users,email',
+            'password'=>'required|string|confirmed',
+        ]); 
+
+        if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+        }
         $user=new User();
         $user->name=$request->name;
         $user->email=$request->email;

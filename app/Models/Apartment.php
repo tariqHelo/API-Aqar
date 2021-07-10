@@ -20,7 +20,12 @@ class Apartment extends Model
         'property_value',
         'electricity_meter_number',
         'duration',
+        'the_number_of_rooms',
+        'electricity_service',
         'additional_details',
         'image',
+        'icon',
     ];
+
+
 }

@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Building;
-use App\Http\Resources\BuildingResource;
-
-use App\Http\Requests\BuildingRequest;
+use App\Models\Shop;
+use App\Http\Resources\ShopResource;
+use App\Http\Requests\ShopRequest;
 use Validator;
 
-class BuildingController extends Controller
+
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +19,8 @@ class BuildingController extends Controller
      */
     public function index()
     {
-        $buildings=Building::get();
-        return BuildingResource::collection($buildings);
+         $shops=Shop::get();
+         return ShopResource::collection($shops);
     }
 
     /**
@@ -41,27 +41,21 @@ class BuildingController extends Controller
      */
     public function store(Request $request)
     {   
-
-          $validator = Validator::make($request->all(),[
-            'name'        =>'required',
-            'lag'         =>'required',
-            'lat'         =>'required',
-            'aqar_type'   =>'required',
-            'elevator'    =>'required',
-            'elevator_count'=>'required',
-            'campany'      =>'required',
-            'campany_phone'=>'required',
-            'worker'       =>'required',
-            'phone'        =>'required',
-            'floor_id'     =>'required',
+         $validator = Validator::make($request->all(),[
+             'shop_number'=> 'required',
+             'shop_space'=> 'required',
+             'is_there_any_water'=> 'required',
+             'is_there_electricity'=> 'required',
+             'is_there_a_bathroom'=> 'required',
+             'duration'=> 'required',
+             'additional_details'=> 'required',
         ]); 
 
         if ($validator->fails()) {
         return response()->json($validator->errors(), 422);
         }
-
-        $buildings=Building::create($request->all());
-        return new BuildingResource($buildings);
+        $shops=Shop::create($request->all());
+        return new ShopResource($shops);
     }
 
     /**
@@ -70,10 +64,9 @@ class BuildingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Building $id)
-    {  //dd(22);
-      return new BuildingResource($id);
-
+    public function show(Shop $id)
+    {
+         return new ShopResource($id);
     }
 
     /**
@@ -96,7 +89,22 @@ class BuildingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $validator = Validator::make($request->all(),[
+             'shop_number'=> 'required',
+             'shop_space'=> 'required',
+             'is_there_any_water'=> 'required',
+             'is_there_electricity'=> 'required',
+             'is_there_a_bathroom'=> 'required',
+             'duration'=> 'required',
+             'additional_details'=> 'required',
+        ]); 
+
+        if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+        }
+        $shops=Shop::update($request->all());
+        return new ShopResource($shops);
     }
 
     /**
@@ -105,9 +113,8 @@ class BuildingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Building $id)
+    public function destroy($id)
     {
-         $id->delete();
-         return response()->noContent();
+        //
     }
 }

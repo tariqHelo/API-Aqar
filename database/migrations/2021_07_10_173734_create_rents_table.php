@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAvailableTable extends Migration
+class CreateRentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,15 @@ class CreateAvailableTable extends Migration
      */
     public function up()
     {
-        Schema::create('available', function (Blueprint $table) {
+        Schema::create('rents', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status');
+            $table->string('name');
+            $table->integer('phone');
+            $table->integer('id_number');
+            $table->date('date_contract');
+            $table->string('email');
+            $table->date('type_rent');
+            $table->date('value_rent');
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ class CreateAvailableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('available');
+        Schema::dropIfExists('rents');
     }
 }
